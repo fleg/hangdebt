@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>hangdebt</title>
+
+	<link href="vendor/bootstrap-css-only/css/bootstrap.min.css" rel="stylesheet">
+	<link href="vendor/ng-tags-input/ng-tags-input.min.css" rel="stylesheet">
+	<link href="vendor/ng-tags-input/ng-tags-input.bootstrap.min.css" rel="stylesheet">
+	<link href="css/main.css" rel="stylesheet">
+	
+	<script src="vendor/angular/angular.min.js"></script>
+	<script src="vendor/angular-bootstrap/ui-bootstrap.min.js"></script>
+	<script src="vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+	<script src="vendor/angular-local-storage/dist/angular-local-storage.min.js"></script>
+	<script src="vendor/ng-tags-input/ng-tags-input.min.js"></script>
+	<script src="vendor/lodash/lodash.min.js"></script>
+	<script src="js/app.js"></script>
+</head>
+
+<body  ng-app="app" ng-controller="AppCtrl">
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">hangdebt - вычислятор долгов</a>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="row">
+					<div class="form-group">
+						<label>Участники</label>
+					</div>
+					<div class="col-lg-12">
+						<div class="form-group">
+							<tags-input ng-model="participants" placeholder="Добавьте участника"
+								></tags-input>
+						</div>
+						<div class="form-group">
+							<button class="btn btn-default btn-danger" ng-click="dropAllParticipants()">Удалить всех</button>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group">
+						<label>Покупки</label>
+					</div>
+					<div class="col-lg-6">
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="Что" ng-model="purchase.what">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="Кто" ng-model="purchase.who" 
+								typeahead="participant.text for participant in participants | filter:$viewValue | limitTo:8"
+								typeahead-editable="false">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="За сколько" ng-model="purchase.price">
+						</div>
+						<div class="form-group">
+							<tags-input placeholder="Добавьте участника" ng-model="purchase.whom" 
+								add-from-autocomplete-only="true">
+								<auto-complete source="participants" min-length="1"></auto-complete>
+							</tags-input>
+						</div>
+						<div class="form-group">
+							<button class="btn btn-default btn-success" ng-click="savePurchase();">Сохранить</button>
+							<button class="btn btn-default btn-warning" ng-click="cancelPurchase();">Отменить</button>
+						</div>
+						<div class="form-group">
+							<button class="btn btn-default btn-danger" ng-click="dropPurchase();">Удалить</button>
+							<button class="btn btn-default btn-danger" ng-click="dropAllPurchases();">Удалить все</button>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="form-group" ng-repeat="purchase in purchases">
+							<button class="btn btn-default btn-primary" ng-click="loadPurchase($index)">{{purchase.what || "n/a"}}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="row" ng-repeat="result in results">
+					<div class="col-lg-2">{{result.from}}</div>
+					<div class="col-lg-1">&rarr;</div>
+					<div class="col-lg-2">{{result.to}}</div>
+					<div class="col-lg-1">=</div>
+					<div class="col-lg-2">{{result.total.toFixed(2)}}</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-offset-6 col-lg-2"><b>{{total.toFixed(2)}}</b></div>
+				
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
